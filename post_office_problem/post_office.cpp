@@ -19,8 +19,6 @@ public:
         w = -1;
     }
     Point(string line){
-//        cout << line.length() << endl;
-//        cout << line << endl;
         int temp = 0;
         int counter = 0;
         int temp_len = 0;
@@ -55,7 +53,6 @@ public:
             cout << "more than 3 int" << endl;
             return ;
         }
-
     }
     Point(Point &p) {
         x = p.x;
@@ -170,7 +167,6 @@ int main(int argc, char **argv) {
     for (int i = 1; i < argc; i++) {
         cout << "*************************" << endl;
         cout << argv[i] << endl;
-//        string file_name = "F:\\codes\\agorthm\\post_office_problem\\input.txt";
         Village  v(argv[i]);
         v.get_post();
     }

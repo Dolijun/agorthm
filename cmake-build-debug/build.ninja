@@ -49,8 +49,8 @@ cmake_ninja_workdir = F$:/codes/agorthm/cmake-build-debug/
 
 build cmake_object_order_depends_target_agorthm: phony || CMakeFiles/agorthm.dir
 
-build CMakeFiles/agorthm.dir/post_office_problem/post_office.cpp.obj: CXX_COMPILER__agorthm_Debug F$:/codes/agorthm/post_office_problem/post_office.cpp || cmake_object_order_depends_target_agorthm
-  DEP_FILE = CMakeFiles\agorthm.dir\post_office_problem\post_office.cpp.obj.d
+build CMakeFiles/agorthm.dir/post_office_problem/mytst_1.cpp.obj: CXX_COMPILER__agorthm_Debug F$:/codes/agorthm/post_office_problem/mytst_1.cpp || cmake_object_order_depends_target_agorthm
+  DEP_FILE = CMakeFiles\agorthm.dir\post_office_problem\mytst_1.cpp.obj.d
   FLAGS = -g -std=gnu++14
   OBJECT_DIR = CMakeFiles\agorthm.dir
   OBJECT_FILE_DIR = CMakeFiles\agorthm.dir\post_office_problem
@@ -63,7 +63,7 @@ build CMakeFiles/agorthm.dir/post_office_problem/post_office.cpp.obj: CXX_COMPIL
 #############################################
 # Link the executable agorthm.exe
 
-build agorthm.exe: CXX_EXECUTABLE_LINKER__agorthm_Debug CMakeFiles/agorthm.dir/post_office_problem/post_office.cpp.obj
+build agorthm.exe: CXX_EXECUTABLE_LINKER__agorthm_Debug CMakeFiles/agorthm.dir/post_office_problem/mytst_1.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\agorthm.dir
