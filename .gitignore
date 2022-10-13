@@ -1,8 +1,5 @@
-test.txt
-temp_.exe
 post_office_problem/mytst_1.cpp
 post_office_problem/mytst.cpp
-post_office_problem/*.md
 post_office_problem/.idea
 *.exe
 cmake-build-debug
