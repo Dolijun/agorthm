@@ -1,0 +1,16 @@
+*************************
+Input filename: ./input.txt
+Output filename: ./output.txt
+*************************
+Object 1 weight:17 value: 16
+Object 2 weight:10 value: 6
+Object 3 weight:4 value: 1
+Object 4 weight:54 value: 55
+*************************
+Object 1 num: 2
+Object 2 num: 0
+Object 3 num: 1
+Object 4 num: 3
+Totle value: 198
+Totle weight: 200
+*************************
