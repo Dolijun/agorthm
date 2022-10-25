@@ -16,21 +16,21 @@ ofstream fout;
 
 class Node {
 public:
-    char data;
-    long weight;
-    Node *parent;
-    Node *l_child;
-    Node *r_child;
+    char data; // 节点字符
+    long weight; // 节点权重
+    Node *parent; //节点的父节点
+    Node *l_child; // 节点的左儿子
+    Node *r_child; // 节点的右儿子
 
     Node();
 
-    Node(char data, long weight);
+    Node(char data, long weight); // 通过数据和权重构造节点
 
-    Node(Node &temp);
+    Node(Node &temp); // 拷贝构造
 
-    Node(Node *l_child, Node *r_child);
+    Node(Node *l_child, Node *r_child); // 构造新节点，左右儿子指向给定的节点
 
-    static bool cmp(Node *a, Node *b);
+    static bool cmp(Node *a, Node *b); // 比较不同节点的大小，用于节点排序
 };
 
 Node::Node(char data, long weight) {
@@ -95,6 +95,7 @@ string read_from_file(string in_file) {
 void parse_file(vector<Node *> &nodes, string &in_str) {
     set<char> keys;
     map<char, int> dict;
+    // 遍历输入文本，统计每个字符
     for (string::iterator idx = in_str.begin(); idx != in_str.end(); ++idx) {
         if (!keys.count(*idx)) {
             keys.insert(*idx);
@@ -106,14 +107,15 @@ void parse_file(vector<Node *> &nodes, string &in_str) {
     for (auto idx = dict.begin(); idx != dict.end(); ++idx) {
         nodes.push_back(new Node(idx->first, idx->second));
     }
+    // 根据字符频率，对字符进行排序
     sort(nodes.begin(), nodes.end(), Node::cmp);
 }
 
 
 class Huffman {
 public:
-    NodePtr tree;
-    map<char, string> huff_dict;
+    NodePtr tree; // huffman树
+    map<char, string> huff_dict; // huffman编码字典
 
     // 根据字符的权重构建 Huffman 树
     Huffman(vector<Node *> &nodes);
@@ -123,10 +125,10 @@ public:
 
     void creatHuff(vector<Node *> &nodes); //构造哈夫曼树
     void createHuffDict(vector<Node *> &nodes); //哈夫曼树生成哈夫曼编码字典
-    void insert_node(vector<Node *> &nodes, NodePtr temp_node);
+    void insert_node(vector<Node *> &nodes, NodePtr temp_node); // 在构造Huffman树的过程中，将两个节点融合产生新的节点，将新节点重新插入原本有序的节点序列中。
 
-    static void encoding(string in_file, string out_file);
-    static void decoding(string in_file, string out_file);
+    static void encoding(string in_file, string out_file); // 根据输入文件，构造Huffman类，然后对输入文件进行编码，保存到输出文件中。
+    static void decoding(string in_file, string out_file); // 根据输入的编码文件，读入Huffman编码字典，构造Huffman类，对编码进行解码，解码的文本保存在输出文件中。
 
 };
 
@@ -157,19 +159,21 @@ Huffman::Huffman(map<char, string> & huff_dict) {
 }
 
 void Huffman::creatHuff(vector<Node *> &nodes) {
+    // nodes 为根据权重（频率）排序的节点数组
     vector<Node *> temp_nodes = nodes;
     int n = nodes.size();
     Node *temp_node1;
     Node *temp_node2;
+    // 依次选取权重最小的节点，融合为新的节点，并重新插入到有序节点序列中。
     for (int i = 0; i < n - 1; ++i) {
-        // 弹出节点
+        // 弹出权重最小的两个节点
         temp_node1 = nodes.back();
         nodes.pop_back();
         temp_node2 = nodes.back();
         nodes.pop_back();
-        // 生成新的节点
+        // 合并生成新的节点
         NodePtr temp_node = new Node(temp_node1, temp_node2);
-        //根据值插入
+        // 根据权重重新插入有序节点序列
         insert_node(nodes, temp_node);
     }
     tree = nodes.front();
@@ -186,16 +190,14 @@ void Huffman::insert_node(vector<Node *> &nodes, NodePtr temp_node) {
 }
 
 void Huffman::createHuffDict(vector<Node *> &nodes) {
-    // stack
     NodePtr s;
     NodePtr parent;
     stack<char> st;
 
-    // 遍历每个节点
+    // 遍历每个叶节点，自底向上生成每个字符的编码
     for (auto node = nodes.begin(); node != nodes.end(); ++node) {
         s = *node;
         string temp;
-        //如果有父亲，自己 和 自己的父亲
         parent = s->parent;
         while (parent) {
             if (parent->l_child == s)
@@ -205,11 +207,12 @@ void Huffman::createHuffDict(vector<Node *> &nodes) {
             s = parent;
             parent = s->parent;
         }
-
+        // 对编码序列逆序
         while (!st.empty()) {
             temp.push_back(st.top());
             st.pop();
         }
+        // 在字典中添加字符对应的编码
         huff_dict[(*node)->data] = temp;
     }
 }

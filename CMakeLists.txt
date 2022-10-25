@@ -4,4 +4,4 @@ project(agorthm)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(agorthm
-        post_office_problem/mytst_1.cpp)
+        HuffmanCode/HuffmanCode.cpp)
