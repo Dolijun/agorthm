@@ -244,7 +244,7 @@ void Huffman::encoding(std::string in_file, std::string out_file) {
     char keys[len];
     bitset<24> values[len];
 
-    // 01 字符串 转为 01 比特溜
+    // 01 字符串 转为 01 比特流
     string cmpl_str(8, '0');
     string temp_str = "111111111111111111111110";
     int i = 0;
@@ -278,11 +278,32 @@ void Huffman::encoding(std::string in_file, std::string out_file) {
             temp = huff_code.substr(i, 8);
         to_save[count] = bitset<8>(temp);
     }
+    int temp_size = sizeof(to_save) / sizeof (bitset<8>);
+    int parts = (temp_size + 2) / 4;
+    bitset<32> final_save[parts];
+    string temp_zero("00000000");
+    string temp_part;
+    temp_part.reserve(32);
+    for(int i = 0; i < parts; ++i){
+        if(i * 4 + 3 < temp_size){
+            for(int j = 0; j < 4; ++j)
+                temp_part += to_save[i * 4 + j].to_string();
+        }
+        else{
+            int cmpl = i * 4 + 4 - temp_size;
+            for(int j = 0; j < (4 - cmpl); ++j)
+                temp_part += to_save[i * 4 + j].to_string();
+            for(int j = 0; j < cmpl; ++j)
+                temp_part += temp_zero;
+        }
+        final_save[i] = bitset<32> (temp_part);
+        temp_part.clear();
+    }
 
     // 将编码的01串写入输出文件
-    len = sizeof(to_save);
-    ofs.write((const char *)&len, sizeof(long));
-    ofs.write((const char *)&to_save, len);
+    len = sizeof(final_save);
+    ofs.write((const char *)&temp_size, sizeof(long));
+    ofs.write((const char *)&final_save, len);
     ofs.close();
 }
 
@@ -310,11 +331,14 @@ void Huffman::decoding(std::string in_file, std::string out_file) {
     temp_size = len / sizeof(bitset<24>);
     bitset<24> values[temp_size + 1];
     ifs.read((char *)&values, len);
-
-    ifs.read((char *)&len, sizeof (long));
-    temp_size = len / sizeof(bitset<8>);
-    bitset<8> temp_code[temp_size + 1];
+    temp_size = 0;
+    ifs.read((char *)&temp_size, sizeof (long));
+    len = ((temp_size + 2) / 4) * sizeof(bitset<32>);
+//    temp_size = len / sizeof(bitset<8>);
+    bitset<32> temp_code[(temp_size + 2) / 4 + 1];
+//    bitset<8> temp_code[temp_size + 1];
     ifs.read((char *)&temp_code, len);
+
 
     // 重建 huffman 编码字典
     map<char, string> huff_dict;
@@ -327,8 +351,14 @@ void Huffman::decoding(std::string in_file, std::string out_file) {
     string huff_code;
     huff_code.reserve(temp_size * 8 + 8);
     for(int i = 0; i < temp_size; ++i){
-        huff_code += temp_code[i].to_string();
+        int part = i / 4;
+        int offset = i % 4 * 8;
+        huff_code += temp_code[part].to_string().substr(offset, 8);
     }
+//    for(int i = 0; i < temp_size; ++i){
+//        huff_code += temp_code[i].to_string();
+//    }
+
 
     // 根据字典构建 huffman 编码树
     Huffman huffman_ = Huffman(huff_dict);
@@ -360,11 +390,10 @@ int main(int argc, char **argv) {
     fout.open(log_file, ios::out);
 
     //遍历每个输入文件
-    string mode;
-    string in_file;
-    string out_file;
+    string mode = "decoding";
+    string in_file = "E:\\codes\\agorthm\\HuffmanCode\\output.txt";
+    string out_file =  "E:\\codes\\agorthm\\HuffmanCode\\encoding.txt";
     if(argc <= 1){
-        mode = "encoding";
         cout << "Use default mode: "<< mode << endl;
         fout << "Use default mode: "<< mode << endl;
     }else{
@@ -373,7 +402,6 @@ int main(int argc, char **argv) {
         fout << "Use mode:" << mode << endl;
     }
     if(argc <= 2){
-        in_file = "E:\\codes\\agorthm\\HuffmanCode\\input.txt";
         cout << "Use default input file: "<< in_file << endl;
         fout << "Use default input file: "<< in_file << endl;
     }else{
@@ -383,7 +411,6 @@ int main(int argc, char **argv) {
     }
 
     if(argc <= 3){
-        out_file = "E:\\codes\\agorthm\\HuffmanCode\\output.txt";
         cout << "Use default output file: " << out_file << endl;
         fout << "Use default output file: " << out_file << endl;
 
