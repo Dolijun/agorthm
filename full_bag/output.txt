@@ -1,5 +1,5 @@
 *************************
-Input filename: ./input.txt
+Input filename: input.txt
 Output filename: ./output.txt
 *************************
 Object 1 weight:17 value: 16

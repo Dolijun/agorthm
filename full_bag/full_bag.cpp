@@ -10,12 +10,12 @@ ofstream fout;
 
 class Object {
 public:
-    int weight;
-    int value;
+    int weight; // 物品的重量
+    int value; // 物品的价值
 
-    Object();
+    Object(); // 物品的默认构造
 
-    Object(int weight, int value);
+    Object(int weight, int value); // 物品类根据重量和价值构造
 };
 
 Object::Object() {
@@ -31,15 +31,15 @@ Object::Object(int weight, int value) {
 
 class FullBag {
 public:
-    int N;
-    int Capacity;
-    vector<Object> objects;
+    int Capacity; // 背包的容量
+    int N;  // 背包中待选物品的种类
+    vector<Object> objects; // 待选物品的列表，记录每种物品的重量和价值
 
-    FullBag();
+    FullBag();  // 背包的默认构造
 
-    FullBag(string file_path);
+    FullBag(string file_path); // 从文件读入背包容量，物品数量和各个物品的重量和价值。
 
-    void get_result();
+    void get_result(); // 根据背包的信息，进行动态规划，得到背包最优的容纳物品重量和质量和每种物品选择的数量
 };
 
 FullBag::FullBag() {
@@ -81,6 +81,7 @@ void FullBag::get_result() {
     vector<vector<int>> dp;
     vector<int> num;
 
+    // 构建状态转移矩阵
     dp.reserve(N + 1);
     for (int i = 0; i <= N; ++i)
         dp.push_back(vector<int>(Capacity + 1, 0));
@@ -89,7 +90,7 @@ void FullBag::get_result() {
     for (int i = 0; i <= N; ++i)
         num.push_back(0);
 
-
+    // 自顶向下的动态规划过程
     for (int i = 1; i <= N; ++i)
         for (int j = 1; j <= Capacity; ++j) {
             int w = objects[i - 1].weight;
@@ -99,6 +100,8 @@ void FullBag::get_result() {
             else
                 dp[i][j] = max(dp[i - 1][j], dp[i][j - w] + v);
         }
+
+    // 自底向上，反推各类别物品的数量
     int j = Capacity;
     for (int i = N; i > 0; --i) {
         int w = objects[i - 1].weight;
@@ -130,8 +133,8 @@ void FullBag::get_result() {
 }
 
 int main(int argc, char **argv) {
-    string out_file = "./output.txt";
-    fout = ofstream(out_file);
+    string log_file = "./output.txt";
+    fout = ofstream(log_file);
 
     for (int i = 1; i < argc; i++) {
         cout << "**********************" << endl;
@@ -141,13 +144,10 @@ int main(int argc, char **argv) {
         fout << "*************************" << endl;
         fout << "Input filename: " << argv[i] << endl;
         fout << "Output filename: ./output.txt" << endl;
+
         FullBag bag(argv[i]);
         bag.get_result();
     }
-
-//    string curcwd = "E:\\codes\\agorthm\\full_bag";
-//    FullBag bag("E:\\codes\\agorthm\\full_bag\\input.txt");
-//    bag.get_result();
 
     cout << "*************************" << endl;
     fout << "*************************" << endl;

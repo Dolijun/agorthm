@@ -1,4 +1,4 @@
-Use mode:encoding
-Use input file:input.txt
-Use output file:encoding.txt
+Use default mode: encoding
+Use default input file: E:\codes\agorthm\HuffmanCode\input.txt
+Use default output file: E:\codes\agorthm\HuffmanCode\output.txt
 Encoding finished
